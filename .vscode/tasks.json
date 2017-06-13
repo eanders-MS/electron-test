@@ -9,7 +9,7 @@
     ],
     "tasks": [
         {
-            "taskName": "default",
+            "taskName": "build-site",
             "args": [],
             "isBuildCommand": true,
             "problemMatcher": [

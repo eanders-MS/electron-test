@@ -49,5 +49,3 @@ gulp.task('build-site', ['clean'], function () {
         'build-css',
         'build-app']);
 });
-
-gulp.task('default', ['build-site']);
