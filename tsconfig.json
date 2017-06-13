@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "importHelpers": true,
-        "module": "none",
+        "module": "commonjs",
         "moduleResolution": "node",
         "preserveConstEnums": true,
         "target": "es6",

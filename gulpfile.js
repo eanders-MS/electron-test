@@ -8,14 +8,13 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task('sass', function () {
+gulp.task('build-css', function () {
     return gulp.src('./src/style/*.scss')
         .pipe(sass())
         .pipe(gulp.dest('./app/client'));
 });
 
-gulp.task('build-app', ['clean'], function () {
-    gulp.start('sass');
+gulp.task('build-app', function () {
     return gulp.src(['src/**/*.ts', 'src/**/*.tsx'])
         .pipe(tsc({
             module: 'commonjs',
@@ -39,11 +38,16 @@ gulp.task('build-app', ['clean'], function () {
         .pipe(gulp.dest('app/'));
 });
 
-gulp.task('copy-site', ['build-app'], function () {
-    return gulp.src([
-        './src/**/*.html',
-        './src/**/*.css'])
+gulp.task('build-html', function () {
+    return gulp.src('./src/**/*.html')
         .pipe(gulp.dest('app/'));
 });
 
-gulp.task('default', ['copy-site']);
+gulp.task('build-site', ['clean'], function () {
+    return gulp.start([
+        'build-html',
+        'build-css',
+        'build-app']);
+});
+
+gulp.task('default', ['build-site']);
