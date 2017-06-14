@@ -18,6 +18,9 @@
     "url": "https://github.com/eanders-MS/electron-test/issues"
   },
   "homepage": "https://github.com/eanders-MS/electron-test#readme",
+  "engines": {
+    "node": "6.10.3"
+  },
   "devDependencies": {
     "@types/react": "^15.0.28",
     "@types/react-dom": "^15.5.0",
