@@ -1,6 +1,6 @@
 {
   "name": "electron-test",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "A place to try out electron practices.",
   "main": "app/server/main.js",
   "scripts": {
