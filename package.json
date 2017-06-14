@@ -4,7 +4,9 @@
   "description": "A place to try out electron practices.",
   "main": "app/server/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp build",
+    "dist:windows": "./node_modules/.bin/build -w --ia32 --x64 --publish onTagOrDraft"
   },
   "repository": {
     "type": "git",
@@ -20,14 +22,72 @@
     "@types/react": "^15.0.28",
     "@types/react-dom": "^15.5.0",
     "electron": "^1.7.2",
+    "electron-builder": "^18.6.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-sass": "^3.1.0",
     "gulp-tsc": "^1.3.2",
+    "rimraf": "^2.6.1",
     "typescript": "^2.3.4"
   },
   "dependencies": {
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
+  },
+  "build": {
+    "asar": true,
+    "appId": "org.eanders-ms.electron-test",
+    "productName": "Electron Test",
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "perMachine": true,
+      "include": "build/installer.nsh"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "protocols": [{
+      "name": "electron-test",
+      "role": "Viewer",
+      "schemes": ["electron-test"]
+    }],
+    "files": [
+      "**/*",
+      "!**/node_modules/*/{README.md,README,readme.md,readme,test}",
+      "!**/node_modules/.bin",
+      "!**/*.{o,hprof,orig,pyc,pyo,rbc}",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes,.editorconfig,.idea,appveyor.yml,.travis.yml,circle.yml}",
+      "!.vscode${/*}",
+      "!doc${/*}",
+      "!src${/*}",
+      "!**/{tsconfig.json,gulpfile.js,README.md,getlicenses.cmd}",
+      "!**/node_modules/@types"
+    ],
+    "publish": {
+      "provider": "github"
+    }
   }
 }
