@@ -13,7 +13,10 @@
                 "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
             },
             "program": "${workspaceRoot}/app/server/main.js",
-            "protocol": "inspector"
+            "protocol": "inspector",
+            "env": {
+                "NODE_ENV": "development"
+            }
         }
     ]
 }

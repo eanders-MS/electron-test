@@ -1,12 +1,15 @@
 {
   "name": "electron-test",
-  "version": "0.0.1",
+  "version": "0.0.13",
   "description": "A place to try out electron practices.",
   "main": "app/server/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "gulp build",
-    "dist:windows": "./node_modules/.bin/build -w --ia32 --x64 --publish onTagOrDraft"
+    "build:dev": "gulp build:dev",
+    "build:dev-webpack": "gulp build:dev-webpack",
+    "build:prod": "gulp build:prod",
+    "dist:windows": "./node_modules/.bin/build --win --ia32 --x64 --publish always",
+    "dist:mac_linux": "./node_modules/.bin/build --mac --linux --publish always"
   },
   "repository": {
     "type": "git",
@@ -18,14 +21,12 @@
     "url": "https://github.com/eanders-MS/electron-test/issues"
   },
   "homepage": "https://github.com/eanders-MS/electron-test#readme",
-  "engines": {
-    "node": "6.10.3"
-  },
   "devDependencies": {
     "@types/react": "^15.0.28",
     "@types/react-dom": "^15.5.0",
+    "ajv": "^5.1.5",
     "electron": "^1.7.2",
-    "electron-builder": "^18.6.2",
+    "electron-builder": "^19.2.7",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-sass": "^3.1.0",
@@ -34,8 +35,12 @@
     "typescript": "^2.3.4"
   },
   "dependencies": {
+    "electron-builder-http": "^19.2.3",
+    "electron-log": "^2.2.6",
+    "electron-updater": "^2.2.2",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "rxjs": "^5.4.1"
   },
   "build": {
     "asar": true,
@@ -48,7 +53,7 @@
       "target": "nsis"
     },
     "nsis": {
-      "perMachine": true,
+      "perMachine": false,
       "include": "build/installer.nsh"
     },
     "dmg": {
@@ -71,11 +76,15 @@
         "deb"
       ]
     },
-    "protocols": [{
-      "name": "electron-test",
-      "role": "Viewer",
-      "schemes": ["electron-test"]
-    }],
+    "protocols": [
+      {
+        "name": "electron-test",
+        "role": "Viewer",
+        "schemes": [
+          "electron-test"
+        ]
+      }
+    ],
     "files": [
       "**/*",
       "!**/node_modules/*/{README.md,README,readme.md,readme,test}",
