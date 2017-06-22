@@ -1,6 +1,6 @@
 {
   "name": "electron-test",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "A place to try out electron practices.",
   "main": "app/server/main.js",
   "scripts": {
@@ -8,8 +8,10 @@
     "build:dev": "gulp build:dev",
     "build:dev-webpack": "gulp build:dev-webpack",
     "build:prod": "gulp build:prod",
-    "dist:windows": "./node_modules/.bin/build --win --ia32 --x64 --publish always",
-    "dist:mac_linux": "./node_modules/.bin/build --mac --linux --publish always"
+    "dist:ia32": "./node_modules/.bin/build --config ./build/build-ia32.json --win --ia32 --publish always",
+    "dist:win64": "./node_modules/.bin/build --config ./build/build-win64.json --win --win64 --publish always",
+    "dist:mac": "./node_modules/.bin/build --config ./build/build-mac.json --mac --publish always",
+    "dist:linux": "./node_modules/.bin/build --config ./build/build-linux.json --linux --publish always"
   },
   "repository": {
     "type": "git",
@@ -26,9 +28,10 @@
     "@types/react-dom": "^15.5.0",
     "ajv": "^5.1.5",
     "electron": "^1.7.2",
-    "electron-builder": "^19.2.7",
+    "electron-builder": "^19.6.1",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
+    "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
     "gulp-tsc": "^1.3.2",
     "rimraf": "^2.6.1",
@@ -36,7 +39,6 @@
   },
   "dependencies": {
     "electron-builder-http": "^19.2.3",
-    "electron-log": "^2.2.6",
     "electron-updater": "^2.2.2",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
@@ -46,36 +48,6 @@
     "asar": true,
     "appId": "org.eanders-ms.electron-test",
     "productName": "Electron Test",
-    "mac": {
-      "category": "public.app-category.developer-tools"
-    },
-    "win": {
-      "target": "nsis"
-    },
-    "nsis": {
-      "perMachine": false,
-      "include": "build/installer.nsh"
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 110,
-          "y": 150
-        },
-        {
-          "x": 240,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    },
     "protocols": [
       {
         "name": "electron-test",

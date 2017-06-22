@@ -20,12 +20,15 @@ export function init() {
         logger.log('checking for update', ...args);
     });
     autoUpdater.on('update-available', (ev: Event, ...args: any[]) => {
+        logger.log('<a href="app://api/checkForUpdate?autoDownload=true">downloadUpdate</a>');
         logger.log('update available: ', ...args);
     });
     autoUpdater.on('update-not-available', (...args: any[]) => {
+        logger.log('<a href="app://api/checkForUpdate">checkForUpdate</a>');
         logger.log('update not available: ', ...args);
     });
     autoUpdater.on('error', (ev: Event, err: Error, ...args: any[]) => {
+        logger.log('<a href="app://api/checkForUpdate">checkForUpdate</a>');
         logger.log('error: ', `<pre>${err.toString()}</pre>`, ...args);
     });
     autoUpdater.on('download-progress', (ev: Event, ...args: any[]) => {

@@ -28,7 +28,7 @@ let template: Electron.MenuItemConstructorOptions[] = []
             },
             {
                 label: 'Download update',
-                click() { AppUpdater.checkForUpdates( { autoDownload: true }); }
+                click() { AppUpdater.checkForUpdates({ autoDownload: true }); }
             },
             {
                 label: 'Download pre-release update',
@@ -44,6 +44,14 @@ let template: Electron.MenuItemConstructorOptions[] = []
 }
 
 
+const handleRedirect = (e: Event, ...args: any[]) => {
+    //if (url != mainWindow.webContents.getURL()) {
+        e.preventDefault()
+        //require('electron').shell.openExternal(url)
+    //}
+}
+
+
 const createMainWindow = () => {
 
     const window = mainWindow = new Electron.BrowserWindow({
@@ -51,10 +59,14 @@ const createMainWindow = () => {
         title: `${pjson.name} - ${pjson.version}`
     });
 
+    window.webContents.on('will-navigate', handleRedirect)
+    window.webContents.on('new-window', handleRedirect)
+
     window.webContents.openDevTools({ mode: 'undocked' });
 
     window.once('ready-to-show', () => {
         window.show();
+        logger.ready();
     });
 
     const page = url.format({
@@ -85,4 +97,8 @@ Electron.app.on('activate', () => {
     if (!mainWindow) {
         createMainWindow();
     }
+});
+
+Electron.ipcMain.on('checkForUpdate', (args: any) => {
+    logger.log('client-envoked checkForUpdate');
 });

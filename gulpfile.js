@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var stream = require('stream');
 
 gulp.task('clean', function () {
     var clean = require('gulp-clean');
@@ -31,4 +32,59 @@ gulp.task('build', ['clean'], function () {
         'build-html',
         'build-css',
         'build-app']);
+});
+
+function sanitizeFilenameForWeb(filename) {
+    return filename.toLowerCase().replace(/\s/g, '-');
+}
+
+gulp.task('package:windows', function() {
+    var rename = require('gulp-rename');
+    var builder = require('electron-builder');
+    var config = Object.assign({},
+        require('./build/build-common.json'),
+        require('./build/build-windows.json'));
+    return builder.build({
+        config
+    }).then((filenames) => {
+        gulp.src(filenames)
+            .pipe(rename(function (path) {
+                path.basename = sanitizeFilenameForWeb(path.basename);
+            }))
+            .pipe(gulp.dest('.'));
+    });
+});
+
+gulp.task('package:mac', function() {
+    var rename = require('gulp-rename');
+    var builder = require('electron-builder');
+    var config = Object.assign({},
+        require('./build/build-common.json'),
+        require('./build/build-mac.json'));
+    return builder.build({
+        config
+    }).then(() => {
+        gulp.src(filenames)
+            .pipe(rename(function (path) {
+                path.basename = sanitizeFilenameForWeb(path.basename);
+            }))
+            .pipe(gulp.dest('.'));
+    });
+});
+
+gulp.task('package:linux', function() {
+    var rename = require('gulp-rename');
+    var builder = require('electron-builder');
+    var config = Object.assign({},
+        require('./build/build-common.json'),
+        require('./build/build-linux.json'));
+    return builder.build({
+        config
+    }).then(() => {
+        gulp.src(filenames)
+            .pipe(rename(function (path) {
+                path.basename = sanitizeFilenameForWeb(path.basename);
+            }))
+            .pipe(gulp.dest('.'));
+    });
 });
