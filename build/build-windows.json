@@ -1,10 +1,4 @@
 {
-    "win": {
-        "target": {
-            "target": "nsis",
-            "arch": ["x64", "ia32"]
-        }
-    },
     "nsis": {
         "include": "build/installer.nsh",
         "perMachine": false,

@@ -38,10 +38,16 @@ function sanitizeFilenameForWeb(filename) {
     return filename.toLowerCase().replace(/\s/g, '-');
 }
 
+function replaceEnvironmentVar(str, name, required) {
+    if (required && !process.env[name])
+        throw new Error(`Required environment variable missing: ${name}`);
+    return str.replace(new RegExp('\\${' + name + '}', 'g'), process.env[name]);
+}
+
 function replaceEnvironmentVars(obj) {
     let str = JSON.stringify(obj);
-    str = str.replace(/\$\{ELECTRON_CACHE\}/g, process.env.ELECTRON_CACHE);
-    str = str.replace(/\$\{ELECTRON_MIRROR\}/g, process.env.ELECTRON_MIRROR);
+    str = replaceEnvironmentVar(str, "ELECTRON_CACHE", false);
+    str = replaceEnvironmentVar(str, "ELECTRON_MIRROR", true);
     return JSON.parse(str);
 }
 
@@ -51,8 +57,8 @@ gulp.task('package:windows', function() {
     var config = Object.assign({},
         replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-windows.json'));
-    console.info(JSON.stringify(config, null, 2));
     return builder.build({
+        targets: builder.Platform.WINDOWS.createTarget("nsis", builder.Arch.ia32, builder.Arch.x64),
         config
     }).then((filenames) => {
         gulp.src(filenames)
@@ -70,8 +76,9 @@ gulp.task('package:mac', function() {
         replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-mac.json'));
     return builder.build({
+        targets: builder.Platform.MAC.createTarget("dmg", "zip"),
         config
-    }).then(() => {
+    }).then((filenames) => {
         gulp.src(filenames)
             .pipe(rename(function (path) {
                 path.basename = sanitizeFilenameForWeb(path.basename);
@@ -87,8 +94,9 @@ gulp.task('package:linux', function() {
         replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-linux.json'));
     return builder.build({
+        targets: builder.Platform.LINUX.createTarget("deb", "rpm"),
         config
-    }).then(() => {
+    }).then((filenames) => {
         gulp.src(filenames)
             .pipe(rename(function (path) {
                 path.basename = sanitizeFilenameForWeb(path.basename);
