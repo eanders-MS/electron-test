@@ -4,14 +4,7 @@
   "description": "A place to try out electron practices.",
   "main": "app/server/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:dev": "gulp build:dev",
-    "build:dev-webpack": "gulp build:dev-webpack",
-    "build:prod": "gulp build:prod",
-    "dist:ia32": "./node_modules/.bin/build --config ./build/build-ia32.json --win --ia32 --publish always",
-    "dist:win64": "./node_modules/.bin/build --config ./build/build-win64.json --win --win64 --publish always",
-    "dist:mac": "./node_modules/.bin/build --config ./build/build-mac.json --mac --publish always",
-    "dist:linux": "./node_modules/.bin/build --config ./build/build-linux.json --linux --publish always"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

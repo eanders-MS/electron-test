@@ -38,12 +38,20 @@ function sanitizeFilenameForWeb(filename) {
     return filename.toLowerCase().replace(/\s/g, '-');
 }
 
+function replaceEnvironmentVars(obj) {
+    let str = JSON.stringify(obj);
+    str = str.replace(/\$\{ELECTRON_CACHE\}/g, process.env.ELECTRON_CACHE);
+    str = str.replace(/\$\{ELECTRON_MIRROR\}/g, process.env.ELECTRON_MIRROR);
+    return JSON.parse(str);
+}
+
 gulp.task('package:windows', function() {
     var rename = require('gulp-rename');
     var builder = require('electron-builder');
     var config = Object.assign({},
-        require('./build/build-common.json'),
+        replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-windows.json'));
+    console.info(JSON.stringify(config, null, 2));
     return builder.build({
         config
     }).then((filenames) => {
@@ -59,7 +67,7 @@ gulp.task('package:mac', function() {
     var rename = require('gulp-rename');
     var builder = require('electron-builder');
     var config = Object.assign({},
-        require('./build/build-common.json'),
+        replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-mac.json'));
     return builder.build({
         config
@@ -76,7 +84,7 @@ gulp.task('package:linux', function() {
     var rename = require('gulp-rename');
     var builder = require('electron-builder');
     var config = Object.assign({},
-        require('./build/build-common.json'),
+        replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-linux.json'));
     return builder.build({
         config
