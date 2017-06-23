@@ -38,16 +38,17 @@ function sanitizeFilenameForWeb(filename) {
     return filename.toLowerCase().replace(/\s/g, '-');
 }
 
-function replaceEnvironmentVar(str, name, required) {
-    if (required && !process.env[name])
+function replaceEnvironmentVar(str, name, defaultValue = undefined) {
+    if (process.env[name] === undefined && defaultValue === undefined)
         throw new Error(`Required environment variable missing: ${name}`);
-    return str.replace(new RegExp('\\${' + name + '}', 'g'), process.env[name]);
+    let value = (process.env[name] === undefined) ? defaultValue : process.env[name]
+    return str.replace(new RegExp('\\${' + name + '}', 'g'), value);
 }
 
 function replaceEnvironmentVars(obj) {
     let str = JSON.stringify(obj);
-    str = replaceEnvironmentVar(str, "ELECTRON_CACHE", false);
-    str = replaceEnvironmentVar(str, "ELECTRON_MIRROR", true);
+    str = replaceEnvironmentVar(str, "ELECTRON_CACHE", "./cache");
+    str = replaceEnvironmentVar(str, "ELECTRON_MIRROR");
     return JSON.parse(str);
 }
 
@@ -94,7 +95,7 @@ gulp.task('package:linux', function() {
         replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-linux.json'));
     return builder.build({
-        targets: builder.Platform.LINUX.createTarget("deb", "rpm"),
+        targets: builder.Platform.LINUX.createTarget("deb", "rpm", "tar.gz"),
         config
     }).then((filenames) => {
         gulp.src(filenames)
