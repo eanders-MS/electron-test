@@ -59,7 +59,7 @@ gulp.task('package:windows', function() {
         replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-windows.json'));
     return builder.build({
-        targets: builder.Platform.WINDOWS.createTarget("nsis", builder.Arch.ia32, builder.Arch.x64),
+        targets: builder.Platform.WINDOWS.createTarget(["nsis", "zip"], builder.Arch.ia32, builder.Arch.x64),
         config
     }).then((filenames) => {
         gulp.src(filenames)
@@ -95,7 +95,7 @@ gulp.task('package:linux', function() {
         replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-linux.json'));
     return builder.build({
-        targets: builder.Platform.LINUX.createTarget("deb", "rpm", "tar.gz"),
+        targets: builder.Platform.LINUX.createTarget(),
         config
     }).then((filenames) => {
         gulp.src(filenames)

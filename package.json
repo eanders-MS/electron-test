@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/eanders-MS/electron-test.git"
   },
-  "author": "Eric Anderson",
+  "author": "Eric Anderson <user@email.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/eanders-MS/electron-test/issues"
