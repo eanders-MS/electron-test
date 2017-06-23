@@ -95,7 +95,7 @@ gulp.task('package:linux', function() {
         replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-linux.json'));
     return builder.build({
-        targets: builder.Platform.LINUX.createTarget("deb", builder.Arch.ia32, builder.Arch.x64),
+        targets: builder.Platform.LINUX.createTarget(["deb", "AppImage"], builder.Arch.ia32, builder.Arch.x64),
         config
     }).then((filenames) => {
         gulp.src(filenames)
