@@ -65,7 +65,7 @@ gulp.task('package:windows', function() {
             .pipe(rename(function (path) {
                 path.basename = sanitizeFilenameForWeb(path.basename);
             }))
-            .pipe(gulp.dest('.'));
+            .pipe(gulp.dest('./dist'));
     });
 });
 
@@ -101,6 +101,6 @@ gulp.task('package:linux', function() {
             .pipe(rename(function (path) {
                 path.basename = sanitizeFilenameForWeb(path.basename);
             }))
-            .pipe(gulp.dest('.'));
+            .pipe(gulp.dest('./dist'));
     });
 });
