@@ -1,7 +1,6 @@
 {
     "mac": {
-        "category": "public.app-category.developer-tools",
-        "target": ["dmg", "zip"]
+        "category": "public.app-category.developer-tools"
     },
     "dmg": {
         "contents": [

@@ -21,7 +21,7 @@
     "@types/react-dom": "^15.5.0",
     "ajv": "^5.1.5",
     "electron": "^1.7.2",
-    "electron-builder": "^19.6.1",
+    "electron-builder": "^19.7.3",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-rename": "^1.2.2",

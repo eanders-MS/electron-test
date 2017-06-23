@@ -31,5 +31,6 @@
         "cache": "${ELECTRON_CACHE}",
         "mirror": "${ELECTRON_MIRROR}",
         "verifyChecksum": false
-    }
+    },
+    "electronVersion": "1.7.2"
 }

@@ -76,14 +76,14 @@ gulp.task('package:mac', function() {
         replaceEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-mac.json'));
     return builder.build({
-        targets: builder.Platform.MAC.createTarget("dmg", "zip"),
+        targets: builder.Platform.MAC.createTarget(["dmg", "zip"]),
         config
     }).then((filenames) => {
         gulp.src(filenames)
             .pipe(rename(function (path) {
                 path.basename = sanitizeFilenameForWeb(path.basename);
             }))
-            .pipe(gulp.dest('.'));
+            .pipe(gulp.dest('./dist'));
     });
 });
 
