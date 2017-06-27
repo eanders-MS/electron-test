@@ -7,11 +7,6 @@ export interface ICheckForUpdateOptions {
     autoDownload?: boolean
 }
 
-var defaultUpdateOptions: ICheckForUpdateOptions = {
-    allowPrerelease: false,
-    autoDownload: false
-}
-
 export function init() {
     if (process.env.NODE_ENV === "development") {
         autoUpdater.updateConfigPath = path.join(process.cwd(), 'dev-app-update.yml');
@@ -41,10 +36,13 @@ export function init() {
 
 
 export function checkForUpdates(options: ICheckForUpdateOptions = {}) {
-    let mergedOptions = Object.assign({}, defaultUpdateOptions, options);
-    autoUpdater.allowPrerelease = mergedOptions.allowPrerelease;
-    autoUpdater.autoDownload = mergedOptions.autoDownload;
+    options = Object.assign({}, {
+        allowPrerelease: false,
+        autoDownload: false
+    }, options);
+    autoUpdater.allowPrerelease = options.allowPrerelease;
+    autoUpdater.autoDownload = options.autoDownload;
     autoUpdater.allowDowngrade = false;
-    logger.log('options', mergedOptions);
+    logger.log('options', options);
     autoUpdater.checkForUpdates();
 }

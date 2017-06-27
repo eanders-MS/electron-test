@@ -34,8 +34,25 @@ gulp.task('build', ['clean'], function () {
         'build-app']);
 });
 
-function sanitizeFilenameForWeb(filename) {
-    return filename.toLowerCase().replace(/\s/g, '-');
+function setReleaseFilename(filename, options = {}) {
+    options = Object.assign({}, {
+        lowerCase: true,
+        replaceWhitespace: true,
+        replaceName: false,
+        srcName: null,
+        dstName: null
+    },
+    options);
+    if (options.replaceName && options.srcName && options.dstName) {
+        filename = filename.replace(options.srcName, options.dstName);
+    }
+    if (options.lowerCase) {
+        filename = filename.toLowerCase();
+    }
+    if (options.replaceWhitespace) {
+        filename = filename.replace(/\s/g, '-');
+    }
+    return filename;
 }
 
 function replaceEnvironmentVar(str, name, defaultValue = undefined) {
@@ -45,10 +62,18 @@ function replaceEnvironmentVar(str, name, defaultValue = undefined) {
     return str.replace(new RegExp('\\${' + name + '}', 'g'), value);
 }
 
-function replaceEnvironmentVars(obj) {
+function replaceBuildEnvironmentVars(obj) {
     let str = JSON.stringify(obj);
     str = replaceEnvironmentVar(str, "ELECTRON_CACHE", "./cache");
     str = replaceEnvironmentVar(str, "ELECTRON_MIRROR");
+    return JSON.parse(str);
+}
+
+function replacePublishEnvironmentVars(obj) {
+    let str = JSON.stringify(obj);
+    str = replaceEnvironmentVar(str, "GH_OWNER", "eanders-MS");
+    str = replaceEnvironmentVar(str, "GH_REPO", "electron-test");
+    str = replaceEnvironmentVar(str, "GH_TOKEN");
     return JSON.parse(str);
 }
 
@@ -56,7 +81,7 @@ gulp.task('package:windows', function() {
     var rename = require('gulp-rename');
     var builder = require('electron-builder');
     var config = Object.assign({},
-        replaceEnvironmentVars(require('./build/build-common.json')),
+        replaceBuildEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-windows.json'));
     return builder.build({
         targets: builder.Platform.WINDOWS.createTarget(["nsis", "zip"], builder.Arch.ia32, builder.Arch.x64),
@@ -64,7 +89,30 @@ gulp.task('package:windows', function() {
     }).then((filenames) => {
         gulp.src(filenames)
             .pipe(rename(function (path) {
-                path.basename = sanitizeFilenameForWeb(path.basename);
+                path.basename = setReleaseFilename(path.basename);
+            }))
+            .pipe(gulp.dest('./dist'));
+    });
+});
+
+gulp.task('package:squirrel.windows', function() {
+    var rename = require('gulp-rename');
+    var builder = require('electron-builder');
+    var config = Object.assign({},
+        replaceBuildEnvironmentVars(require('./build/build-common.json')),
+        require('./build/build-squirrel.windows.json'));
+    return builder.build({
+        targets: builder.Platform.WINDOWS.createTarget(["squirrel"], builder.Arch.x64),
+        config
+    }).then((filenames) => {
+        gulp.src(filenames)
+            .pipe(rename(function (path) {
+                path.basename = setReleaseFilename(path.basename, {
+                    lowerCase: false,
+                    replaceName: true,
+                    srcName: config.productName,
+                    dstName: config.squirrelWindows.name
+                });
             }))
             .pipe(gulp.dest('./dist'));
     });
@@ -74,7 +122,7 @@ gulp.task('package:mac', function() {
     var rename = require('gulp-rename');
     var builder = require('electron-builder');
     var config = Object.assign({},
-        replaceEnvironmentVars(require('./build/build-common.json')),
+        replaceBuildEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-mac.json'));
     return builder.build({
         targets: builder.Platform.MAC.createTarget(["dmg", "zip"]),
@@ -82,7 +130,7 @@ gulp.task('package:mac', function() {
     }).then((filenames) => {
         gulp.src(filenames)
             .pipe(rename(function (path) {
-                path.basename = sanitizeFilenameForWeb(path.basename);
+                path.basename = setReleaseFilename(path.basename);
             }))
             .pipe(gulp.dest('./dist'));
     });
@@ -92,7 +140,7 @@ gulp.task('package:linux', function() {
     var rename = require('gulp-rename');
     var builder = require('electron-builder');
     var config = Object.assign({},
-        replaceEnvironmentVars(require('./build/build-common.json')),
+        replaceBuildEnvironmentVars(require('./build/build-common.json')),
         require('./build/build-linux.json'));
     return builder.build({
         targets: builder.Platform.LINUX.createTarget(["deb", "AppImage"], builder.Arch.ia32, builder.Arch.x64),
@@ -100,8 +148,77 @@ gulp.task('package:linux', function() {
     }).then((filenames) => {
         gulp.src(filenames)
             .pipe(rename(function (path) {
-                path.basename = sanitizeFilenameForWeb(path.basename);
+                path.basename = setReleaseFilename(path.basename);
             }))
             .pipe(gulp.dest('./dist'));
     });
+});
+
+function publishFiles(filelist) {
+    var CancellationToken = require('electron-builder-http/out/CancellationToken').CancellationToken;
+    var GitHubPublisher = require('electron-publish/out/gitHubPublisher').GitHubPublisher;
+    var MultiProgress = require('electron-publish/out/multiProgress').MultiProgress;
+    var publishConfig = replacePublishEnvironmentVars(require('./build/build-publish.json'));
+
+    const context = {
+        cancellationToken: new CancellationToken(),
+        progress: new MultiProgress()
+    };
+    const publisher = new GitHubPublisher(
+        context,
+        publishConfig,
+        pjson.version, {
+            publish: "always",
+            draft: true,
+            prerelease: true
+        });
+    const errorlist = [];
+
+    const uploads = filelist.map(file => {
+        return publisher.upload(file)
+            .catch((err) => {
+                errorlist.push(err.response ? `Failed to upload ${file}, http status code ${err.response.statusCode}` : err);
+                return Promise.resolve();
+            });
+    });
+
+    return Promise.all(uploads)
+    .then(() => errorlist.forEach((err) => console.error(err)));
+}
+
+gulp.task('publish:windows', function () {
+    var winSquirrelConfig = require('./build/build-squirrel.windows.json');
+    var pjson = require('./package.json');
+
+    const name = pjson.name.toLowerCase();
+    const winSquirrelName = winSquirrelConfig.squirrelWindows.name;
+    const filelist = [];
+
+    filelist.push('./dist/RELEASES');
+    filelist.push('./dist/latest.yml');
+    filelist.push(`./dist/${name}-setup-${pjson.version}.exe`);
+    filelist.push(`./dist/${name}-${pjson.version}-win.zip`);
+    filelist.push(`./dist/${name}-${pjson.version}-ia32-win.zip`);
+    filelist.push(`./dist/${winSquirrelName}-Setup-${pjson.version}.exe`);
+    filelist.push(`./dist/${winSquirrelName}-${pjson.version}-full.nupkg`);
+
+    return publishFiles(filelist);
+});
+
+gulp.task('publish:mac', function () {
+    var pjson = require('./package.json');
+
+    const name = pjson.name.toLowerCase();
+    const filelist = [];
+
+    return publishFiles(filelist);
+});
+
+gulp.task('publish:linux', function () {
+    var pjson = require('./package.json');
+
+    const name = pjson.name.toLowerCase();
+    const filelist = [];
+
+    return publishFiles(filelist);
 });

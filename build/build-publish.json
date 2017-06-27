@@ -1,0 +1,6 @@
+{
+    "provider": "github",
+    "owner": "${GH_OWNER}",
+    "repo": "${GH_REPO}",
+    "token": "${GH_TOKEN}"
+}

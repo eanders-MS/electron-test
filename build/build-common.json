@@ -24,9 +24,6 @@
         "!**/{tsconfig.json,gulpfile.js,README.md,getlicenses.cmd}",
         "!**/node_modules/@types"
     ],
-    "publish": {
-        "provider": "github"
-    },
     "electronDownload": {
         "cache": "${ELECTRON_CACHE}",
         "mirror": "${ELECTRON_MIRROR}",

@@ -1,7 +1,8 @@
 import * as Electron from 'electron';
 import * as url from 'url';
 import * as path from 'path';
-import * as AppUpdater from './updater';
+import * as NsisUpdater from './updater-nsis';
+import * as SquirrelUpdater from './updater-squirrel';
 import * as logger from './logger';
 var pjson = require('../../package.json') as any;
 
@@ -11,7 +12,7 @@ export var mainWindow: Electron.BrowserWindow;
 let template: Electron.MenuItemConstructorOptions[] = []
 {
     const name = pjson.name;
-    template.unshift({
+    template.push({
         label: name,
         submenu: [
             {
@@ -19,28 +20,46 @@ let template: Electron.MenuItemConstructorOptions[] = []
                 role: 'about'
             },
             {
-                label: 'Check for update',
-                click() { AppUpdater.checkForUpdates(); }
-            },
-            {
-                label: 'Check for pre-release update',
-                click() { AppUpdater.checkForUpdates({ allowPrerelease: true }); }
-            },
-            {
-                label: 'Download update',
-                click() { AppUpdater.checkForUpdates({ autoDownload: true }); }
-            },
-            {
-                label: 'Download pre-release update',
-                click() { AppUpdater.checkForUpdates({ allowPrerelease: true, autoDownload: true }); }
-            },
-            {
                 label: 'Quit',
                 accelerator: 'Command+Q',
                 click() { Electron.app.quit(); }
-            },
+            }
         ]
-    })
+    });
+    template.push({
+        label: "NSIS",
+        submenu: [
+            {
+                label: 'Check for update',
+                click() { NsisUpdater.checkForUpdates(); }
+            },
+            {
+                label: 'Check for pre-release update',
+                click() { NsisUpdater.checkForUpdates({ allowPrerelease: true }); }
+            },
+            {
+                label: 'Download update',
+                click() { NsisUpdater.checkForUpdates({ autoDownload: true }); }
+            },
+            {
+                label: 'Download pre-release update',
+                click() { NsisUpdater.checkForUpdates({ allowPrerelease: true, autoDownload: true }); }
+            }
+        ]
+    });
+    template.push({
+        label: "Squirrel",
+        submenu: [
+            {
+                label: 'Check for update',
+                click() { SquirrelUpdater.checkForUpdates(); }
+            },
+            {
+                label: 'Check for pre-release update',
+                click() { SquirrelUpdater.checkForUpdates({ allowPrerelease: true }); }
+            }
+        ]
+    });
 }
 
 
@@ -80,7 +99,8 @@ const createMainWindow = () => {
     const menu = Electron.Menu.buildFromTemplate(template);
     Electron.Menu.setApplicationMenu(menu);
 
-    AppUpdater.init();
+    NsisUpdater.init();
+    SquirrelUpdater.init();
 
     logger.log("server ready");
 }

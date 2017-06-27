@@ -21,7 +21,10 @@
     "@types/react-dom": "^15.5.0",
     "ajv": "^5.1.5",
     "electron": "^1.7.2",
-    "electron-builder": "^19.7.3",
+    "electron-builder": "^19.10.0",
+    "electron-builder-http": "^19.2.3",
+    "electron-builder-squirrel-windows": "^19.10.0",
+    "electron-publish": "^19.8.0",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-rename": "^1.2.2",
@@ -31,43 +34,9 @@
     "typescript": "^2.3.4"
   },
   "dependencies": {
-    "electron-builder-http": "^19.2.3",
     "electron-updater": "^2.2.2",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "rxjs": "^5.4.1"
-  },
-  "build": {
-    "asar": true,
-    "appId": "org.eanders-ms.electron-test",
-    "productName": "Electron Test",
-    "protocols": [
-      {
-        "name": "electron-test",
-        "role": "Viewer",
-        "schemes": [
-          "electron-test"
-        ]
-      }
-    ],
-    "files": [
-      "**/*",
-      "!**/node_modules/*/{README.md,README,readme.md,readme,test}",
-      "!**/node_modules/.bin",
-      "!**/*.{o,hprof,orig,pyc,pyo,rbc}",
-      "!**/._*",
-      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.gitignore,.gitattributes,.editorconfig,.idea,appveyor.yml,.travis.yml,circle.yml,dev-app-update.yml}",
-      "!.vscode${/*}",
-      "!doc${/*}",
-      "!src${/*}",
-      "!dist${/*}",
-      "!build${/*}",
-      "!cache${/*}",
-      "!**/{tsconfig.json,gulpfile.js,README.md,getlicenses.cmd}",
-      "!**/node_modules/@types"
-    ],
-    "publish": {
-      "provider": "github"
-    }
   }
 }
