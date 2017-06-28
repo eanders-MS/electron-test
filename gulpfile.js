@@ -197,14 +197,13 @@ gulp.task('publish:windows', function () {
 });
 
 gulp.task('publish:squirrel.windows', function () {
-    var winSquirrelConfig = require('./build/build-squirrel.windows.json');
+    var name = require('./build/build-squirrel.windows.json').squirrelWindows.name;
 
-    const winSquirrelName = winSquirrelConfig.squirrelWindows.name;
     const filelist = [];
 
     filelist.push('./dist/RELEASES');
-    filelist.push(`./dist/${winSquirrelName}-Setup-${pjson.version}.exe`);
-    filelist.push(`./dist/${winSquirrelName}-${pjson.version}-full.nupkg`);
+    filelist.push(`./dist/${name}-Setup-${pjson.version}.exe`);
+    filelist.push(`./dist/${name}-${pjson.version}-full.nupkg`);
 
     return publishFiles(filelist);
 });
