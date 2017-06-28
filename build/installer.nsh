@@ -1,9 +1,9 @@
 !macro customInit
     ; Attempt to uninstall older, squirrel-based emulator.
     DetailPrint "Uninstall Squirrel-based version of application"
-    IfFileExists "..\..\botframework\Update.exe" 0 noSquirrel
-    nsExec::Exec "$\"..\..\botframework\Update.exe$\" --uninstall -s"
-    noSquirrel:
+    IfFileExists "..\..\electron-test\Update.exe" 0 SquirrelNotFound
+    nsExec::Exec "$\"..\..\electron-test\Update.exe$\" --uninstall -s"
+    SquirrelNotFound:
 !macroend
 
 !macro customInstall

@@ -20,6 +20,10 @@ let template: Electron.MenuItemConstructorOptions[] = []
                 role: 'about'
             },
             {
+                label: 'Clear Log',
+                click() { logger.clear(); }
+            },
+            {
                 label: 'Quit',
                 accelerator: 'Command+Q',
                 click() { Electron.app.quit(); }
@@ -44,6 +48,10 @@ let template: Electron.MenuItemConstructorOptions[] = []
             {
                 label: 'Download pre-release update',
                 click() { NsisUpdater.checkForUpdates({ allowPrerelease: true, autoDownload: true }); }
+            },
+            {
+                label: 'Quit and install',
+                click() { NsisUpdater.quitAndInstall(); }
             }
         ]
     });
@@ -57,6 +65,10 @@ let template: Electron.MenuItemConstructorOptions[] = []
             {
                 label: 'Check for pre-release update',
                 click() { SquirrelUpdater.checkForUpdates({ allowPrerelease: true }); }
+            },
+            {
+                label: 'Quit and install',
+                click() { SquirrelUpdater.quitAndInstall(); }
             }
         ]
     });
@@ -72,6 +84,9 @@ const handleRedirect = (e: Event, ...args: any[]) => {
 
 
 const createMainWindow = () => {
+    if (SquirrelUpdater.handleStartupEvent()) {
+        return;
+    }
 
     const window = mainWindow = new Electron.BrowserWindow({
         show: false,
@@ -81,7 +96,7 @@ const createMainWindow = () => {
     window.webContents.on('will-navigate', handleRedirect)
     window.webContents.on('new-window', handleRedirect)
 
-    window.webContents.openDevTools({ mode: 'undocked' });
+    //window.webContents.openDevTools({ mode: 'undocked' });
 
     window.once('ready-to-show', () => {
         window.show();

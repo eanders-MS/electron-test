@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var stream = require('stream');
+var pjson = require('./package.json');
 
 gulp.task('clean', function () {
     var clean = require('gulp-clean');
@@ -28,6 +29,7 @@ gulp.task('build-html', function () {
 });
 
 gulp.task('build', ['clean'], function () {
+    console.info(`Building ${pjson.name} v${pjson.version}`);
     return gulp.start([
         'build-html',
         'build-css',
@@ -187,18 +189,24 @@ function publishFiles(filelist) {
 }
 
 gulp.task('publish:windows', function () {
-    var winSquirrelConfig = require('./build/build-squirrel.windows.json');
-    var pjson = require('./package.json');
-
     const name = pjson.name.toLowerCase();
-    const winSquirrelName = winSquirrelConfig.squirrelWindows.name;
     const filelist = [];
 
-    filelist.push('./dist/RELEASES');
     filelist.push('./dist/latest.yml');
     filelist.push(`./dist/${name}-setup-${pjson.version}.exe`);
     filelist.push(`./dist/${name}-${pjson.version}-win.zip`);
     filelist.push(`./dist/${name}-${pjson.version}-ia32-win.zip`);
+
+    return publishFiles(filelist);
+});
+
+gulp.task('publish:squirrel.windows', function () {
+    var winSquirrelConfig = require('./build/build-squirrel.windows.json');
+
+    const winSquirrelName = winSquirrelConfig.squirrelWindows.name;
+    const filelist = [];
+
+    filelist.push('./dist/RELEASES');
     filelist.push(`./dist/${winSquirrelName}-Setup-${pjson.version}.exe`);
     filelist.push(`./dist/${winSquirrelName}-${pjson.version}-full.nupkg`);
 
@@ -206,8 +214,6 @@ gulp.task('publish:windows', function () {
 });
 
 gulp.task('publish:mac', function () {
-    var pjson = require('./package.json');
-
     const name = pjson.name.toLowerCase();
     const filelist = [];
 
@@ -215,8 +221,6 @@ gulp.task('publish:mac', function () {
 });
 
 gulp.task('publish:linux', function () {
-    var pjson = require('./package.json');
-
     const name = pjson.name.toLowerCase();
     const filelist = [];
 

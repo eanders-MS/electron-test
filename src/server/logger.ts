@@ -25,3 +25,13 @@ export function log(message?: any, ...optionalParams: any[]) {
         });
     }
 }
+
+export function clear() {
+    if (mainWindow && mainWindow.webContents && windowReady) {
+        sendQueue.forEach(entry => {
+            mainWindow.webContents.send(entry.message, ...entry.optionalParams);
+        });
+        sendQueue = [];
+        mainWindow.webContents.send('log-clear');
+    }
+}

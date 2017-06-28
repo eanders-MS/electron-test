@@ -10,4 +10,7 @@ export function init() {
     Electron.ipcRenderer.on('log', (event: Event, ...args: any[]) => {
         log(args[0], ...args.slice(1));
     });
+    Electron.ipcRenderer.on('log-clear', () => {
+        MainView.clearLog();
+    });
 }

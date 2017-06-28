@@ -46,3 +46,7 @@ export function checkForUpdates(options: ICheckForUpdateOptions = {}) {
     logger.log('options', options);
     autoUpdater.checkForUpdates();
 }
+
+export function quitAndInstall() {
+    autoUpdater.quitAndInstall();
+}

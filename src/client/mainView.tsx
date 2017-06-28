@@ -39,6 +39,10 @@ export class MainView extends React.Component<{}, IMainViewState> {
         console.info(message, ...optionalParams);
     }
 
+    static clearLog() {
+        this.log$.next(null);
+    }
+
     static makeString(thing: any): string {
         if (typeof thing === 'string') {
             return thing;

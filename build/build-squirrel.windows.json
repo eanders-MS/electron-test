@@ -1,4 +1,7 @@
 {
+    "extraResources": [
+        "app-update.yml"
+    ],
     "squirrelWindows": {
         "name": "electrontest"
     }
