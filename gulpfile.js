@@ -187,7 +187,6 @@ function publishFiles(filelist) {
 
 gulp.task('publish:windows', function () {
     const filelist = [];
-
     filelist.push('./dist/latest.yml');
     filelist.push(`./dist/${pjson.name}-setup-${pjson.version}.exe`);
     filelist.push(`./dist/${pjson.name}-${pjson.version}-win.zip`);
@@ -200,7 +199,6 @@ gulp.task('publish:squirrel.windows', function () {
     var name = require('./build/build-squirrel.windows.json').squirrelWindows.name;
 
     const filelist = [];
-
     filelist.push('./dist/RELEASES');
     filelist.push(`./dist/${name}-Setup-${pjson.version}.exe`);
     filelist.push(`./dist/${name}-${pjson.version}-full.nupkg`);
