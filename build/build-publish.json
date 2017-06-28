@@ -1,6 +1,6 @@
 {
     "provider": "github",
-    "owner": "${GH_OWNER}",
-    "repo": "${GH_REPO}",
+    "owner": "eanders-MS",
+    "repo": "electron-test",
     "token": "${GH_TOKEN}"
 }

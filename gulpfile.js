@@ -66,15 +66,12 @@ function replaceEnvironmentVar(str, name, defaultValue = undefined) {
 
 function replaceBuildEnvironmentVars(obj) {
     let str = JSON.stringify(obj);
-    str = replaceEnvironmentVar(str, "ELECTRON_CACHE", "./cache");
     str = replaceEnvironmentVar(str, "ELECTRON_MIRROR");
     return JSON.parse(str);
 }
 
 function replacePublishEnvironmentVars(obj) {
     let str = JSON.stringify(obj);
-    str = replaceEnvironmentVar(str, "GH_OWNER", "eanders-MS");
-    str = replaceEnvironmentVar(str, "GH_REPO", "electron-test");
     str = replaceEnvironmentVar(str, "GH_TOKEN");
     return JSON.parse(str);
 }
@@ -189,13 +186,12 @@ function publishFiles(filelist) {
 }
 
 gulp.task('publish:windows', function () {
-    const name = pjson.name.toLowerCase();
     const filelist = [];
 
     filelist.push('./dist/latest.yml');
-    filelist.push(`./dist/${name}-setup-${pjson.version}.exe`);
-    filelist.push(`./dist/${name}-${pjson.version}-win.zip`);
-    filelist.push(`./dist/${name}-${pjson.version}-ia32-win.zip`);
+    filelist.push(`./dist/${pjson.name}-setup-${pjson.version}.exe`);
+    filelist.push(`./dist/${pjson.name}-${pjson.version}-win.zip`);
+    filelist.push(`./dist/${pjson.name}-${pjson.version}-ia32-win.zip`);
 
     return publishFiles(filelist);
 });
