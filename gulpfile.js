@@ -210,14 +210,12 @@ gulp.task('publish:squirrel.windows', function () {
 });
 
 gulp.task('publish:mac', function () {
-    const name = pjson.name.toLowerCase();
     const filelist = [];
 
     return publishFiles(filelist);
 });
 
 gulp.task('publish:linux', function () {
-    const name = pjson.name.toLowerCase();
     const filelist = [];
 
     return publishFiles(filelist);
