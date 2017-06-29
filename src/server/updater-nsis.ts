@@ -48,5 +48,5 @@ export function checkForUpdates(options: ICheckForUpdateOptions = {}) {
 }
 
 export function quitAndInstall() {
-    autoUpdater.quitAndInstall();
+    autoUpdater.quitAndInstall(false);
 }

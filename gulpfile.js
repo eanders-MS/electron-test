@@ -200,7 +200,7 @@ gulp.task('publish:squirrel.windows', function () {
 
     const filelist = [];
     filelist.push('./dist/RELEASES');
-    filelist.push(`./dist/${name}-Setup-${pjson.version}.exe`);
+    //filelist.push(`./dist/${name}-Setup-${pjson.version}.exe`);
     filelist.push(`./dist/${name}-${pjson.version}-full.nupkg`);
 
     return publishFiles(filelist);

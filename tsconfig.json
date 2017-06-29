@@ -19,7 +19,9 @@
     "exclude": [
         "node_modules",
         "app",
-        "dist"
+        "dist",
+        "build",
+        "cache"
     ],
     "compileOnSave": false
 }
